@@ -7,11 +7,90 @@
     <title>Mandelbrot</title>
   </head>
   <body>
-    <pre id="ascii-output"></pre>
-    <!-- <canvas id="canvas" width="450" height="350"></canvas> -->
+    <canvas id="canvas" width="450" height="350"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.6.0/lib/p5.js"></script>
+    <!-- <div id="ascii-output"></div> -->
     <!-- <script src="/mandelbrot.js"></script> -->
-    <!-- <script src="/Home.js"></script> -->
-    <script src="/HomeFinal.js"></script>
+    <script src="/Home.js"></script>
+    <!-- <script src="/HomeFinal.js"></script> -->
   </body>
 </html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ASCII Art</title>
+    <style>
+      body {
+        font-family: monospace;
+        font-size: 7.41px;
+        line-height: 7.41px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ascii-output"></div>
+
+    <script>
+      const density = 'Ñ@#W$9876543210?!abc;:+=-,._ ';
+      let pixelSize = 3;
+      const img = new Image();
+
+      img.onload = function () {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width / pixelSize;
+        canvas.height = img.height / pixelSize;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+        drawAscii(imageData);
+      };
+
+      img.src = './uber.jpeg'; // Replace with the correct path to your image file
+
+      function drawAscii(imageData) {
+        let asciiOutput = '';
+
+        for (let j = 0; j < imageData.height; j++) {
+          for (let i = 0; i < imageData.width; i++) {
+            let pixelIndex = (i + j * imageData.width) * 4;
+            const r = imageData.data[pixelIndex + 0];
+            const g = imageData.data[pixelIndex + 1];
+            const b = imageData.data[pixelIndex + 2];
+
+            const brightness = (r + g + b) / 3;
+            const character = mapBrightnessToCharacter(brightness);
+
+            let fillColor;
+            if (brightness > 128) {
+              fillColor = `rgb(0, 0, ${255 - (brightness - 128) * 2})`;
+            } else {
+              fillColor = 'rgb(255, 255, 255)';
+            }
+
+            const wrappedCharacter = `<span style="color:${fillColor}">${character}</span>`;
+            asciiOutput += wrappedCharacter;
+          }
+          asciiOutput += '<br>';
+        }
+
+        document.getElementById('ascii-output').innerHTML = asciiOutput;
+      }
+
+      function mapBrightnessToCharacter(brightness) {
+        const index = Math.floor(map(brightness, 0, 169, density.length, 0));
+        return density.charAt(index);
+      }
+
+      function map(value, start1, stop1, start2, stop2) {
+        return (
+          start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
+        );
+      }
+    </script>
+  </body>
+</html>
+</html> -->

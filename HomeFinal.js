@@ -10,24 +10,15 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(556, 755);
-  const ctx = drawingContext;
-  ctx.imageSmoothingEnabled = false;
-  if (ctx instanceof CanvasRenderingContext2D) {
-    ctx.canvas.willReadFrequently = true;
-  }
+  photo.loadPixels();
+  drawAscii();
 }
 
-function draw() {
-  background(0, 0, 230);
+function drawAscii() {
+  let asciiOutput = '';
 
-  let w = width / photo.width;
-  let h = height / photo.height;
-
-  photo.loadPixels();
-
-  for (let i = 0; i < photo.width; i++) {
-    for (let j = 0; j < photo.height; j++) {
+  for (let j = 0; j < photo.height; j++) {
+    for (let i = 0; i < photo.width; i++) {
       let pixelIndex = (i + j * photo.width) * 4;
       const r = photo.pixels[pixelIndex + 0];
       const g = photo.pixels[pixelIndex + 1];
@@ -36,20 +27,21 @@ function draw() {
       const brightness = (r + g + b) / 3;
       const character = mapBrightnessToCharacter(brightness);
 
-      noStroke();
-
       let fillColor;
       if (brightness > 128) {
         fillColor = color(0, 0, 255 - (brightness - 128) * 2);
       } else {
         fillColor = color(255);
       }
-      fill(fillColor);
 
-      textSize(7.41);
-      text(character, i * w, j * h);
+      const fillRgb = `rgb(${fillColor.levels[0]}, ${fillColor.levels[1]}, ${fillColor.levels[2]})`;
+      const wrappedCharacter = `<span style="color:${fillRgb}">${character}</span>`;
+      asciiOutput += wrappedCharacter;
     }
+    asciiOutput += '<br>';
   }
+
+  document.getElementById('ascii-output').innerHTML = asciiOutput;
 }
 
 function mapBrightnessToCharacter(brightness) {
